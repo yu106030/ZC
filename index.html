@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>✦ 魔法解題古籍 · ZeroJudge 題庫</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{--gold:#f5c76b;--cyan:#5eead4;--violet:#a78bfa;--bg:#07051a;}
+html,body{height:100%}
+body{background:var(--bg);color:#e6e1ff;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;overflow:hidden}
+.mono{font-family:"JetBrains Mono","Fira Code",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+/* ===== 背景層 ===== */
+.bg-magic{position:fixed;inset:0;z-index:-1;background:
+ radial-gradient(60rem 40rem at 15% -10%,rgba(124,58,237,.35),transparent 60%),
+ radial-gradient(50rem 40rem at 100% 10%,rgba(14,165,233,.18),transparent 60%),
+ radial-gradient(40rem 30rem at 50% 120%,rgba(245,199,107,.12),transparent 60%),
+ linear-gradient(180deg,#0a0724,#05040f)}
+.blob{position:fixed;z-index:-1;border-radius:9999px;filter:blur(70px);pointer-events:none;will-change:transform}
+.b1{width:34rem;height:34rem;left:-8rem;top:-6rem;background:rgba(124,58,237,.35);animation:drift1 22s ease-in-out infinite}
+.b2{width:30rem;height:30rem;right:-6rem;top:20%;background:rgba(14,165,233,.22);animation:drift2 28s ease-in-out infinite}
+.b3{width:28rem;height:28rem;left:30%;bottom:-10rem;background:rgba(245,199,107,.16);animation:drift3 25s ease-in-out infinite}
+@keyframes drift1{50%{transform:translate(12vw,14vh) scale(1.2)}}
+@keyframes drift2{50%{transform:translate(-14vw,10vh) scale(1.15)}}
+@keyframes drift3{50%{transform:translate(-10vw,-12vh) scale(1.25)}}
+.stars,.stars2{position:fixed;inset:0;z-index:-1;pointer-events:none;background-repeat:repeat}
+.stars{background-image:radial-gradient(1px 1px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 120px 90px,#c4b5fd,transparent),radial-gradient(1.5px 1.5px at 210px 160px,#fde68a,transparent),radial-gradient(1px 1px at 300px 40px,#fff,transparent);background-size:340px 220px;animation:twinkle 6s ease-in-out infinite}
+.stars2{background-image:radial-gradient(1px 1px at 70px 120px,#99f6e4,transparent),radial-gradient(1.5px 1.5px at 250px 70px,#fff,transparent),radial-gradient(1px 1px at 160px 20px,#ddd6fe,transparent);background-size:280px 180px;animation:twinkle 9s ease-in-out infinite reverse}
+@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.75}}
+#fx{position:fixed;inset:0;z-index:-1;pointer-events:none}
+#glow{position:fixed;left:0;top:0;width:460px;height:460px;margin:-230px 0 0 -230px;z-index:-1;pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.22),rgba(94,234,212,.07) 45%,transparent 68%);will-change:transform;opacity:0;transition:opacity .4s}
+#runes{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.rune{position:absolute;bottom:-10%;color:rgba(245,199,107,.0);font-size:22px;text-shadow:0 0 12px currentColor;animation:riseRune linear infinite}
+@keyframes riseRune{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.35}100%{transform:translateY(-120vh) rotate(260deg);opacity:0}}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;background:linear-gradient(90deg,#a78bfa,#5eead4,#f5c76b);box-shadow:0 0 12px #5eead4,0 0 22px #f5c76b;transition:width .1s}
+.ring{position:fixed;z-index:55;pointer-events:none;border-radius:50%;border:2px solid rgba(245,199,107,.8);box-shadow:0 0 30px rgba(245,199,107,.6),inset 0 0 30px rgba(94,234,212,.4);animation:ringOut .9s ease-out forwards}
+@keyframes ringOut{from{width:20px;height:20px;margin:-10px;opacity:1}to{width:900px;height:900px;margin:-450px;opacity:0}}
+
+/* ===== 玻璃面板與邊框 ===== */
+.glass{background:linear-gradient(145deg,rgba(30,20,70,.55),rgba(12,10,36,.62));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(167,139,250,.25);box-shadow:0 0 0 1px rgba(255,255,255,.03) inset,0 10px 40px rgba(0,0,0,.45),0 0 30px rgba(124,58,237,.12)}
+.rot-border{position:relative}
+.rot-border::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2px;pointer-events:none;z-index:2;
+ background:conic-gradient(from var(--ang),transparent 0 55%,#f5c76b,#5eead4,#a78bfa,transparent 95%);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude;animation:ang 6s linear infinite}
+@keyframes ang{to{--ang:360deg}}
+.spot{position:relative}
+.spot::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.09),transparent 60%);opacity:0;transition:opacity .3s}
+.spot:hover::after{opacity:1}
+.tilt{transition:transform .25s ease-out;transform-style:preserve-3d;will-change:transform}
+.perspective{perspective:1300px}
+
+/* ===== 文字特效 ===== */
+.gold-text{background:linear-gradient(90deg,#fde68a,#f5c76b,#fff7d1,#f5c76b,#fde68a);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:-220% 0}}
+.rune-title{filter:drop-shadow(0 0 14px rgba(245,199,107,.4))}
+.sent{opacity:0;display:inline;animation:sentIn .6s ease forwards}
+@keyframes sentIn{from{opacity:0;filter:blur(6px)}to{opacity:1;filter:none}}
+.chip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88em;padding:.08em .45em;border-radius:6px;color:#99f6e4;background:rgba(94,234,212,.1);border:1px solid rgba(94,234,212,.3);white-space:nowrap}
+.badge{animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.4) translateY(8px)}to{opacity:1;transform:none}}
+
+/* ===== 側邊欄 ===== */
+.item{position:relative;transition:all .25s ease;border:1px solid transparent;overflow:hidden}
+.item.enter{animation:slideIn .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes slideIn{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
+.item::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.14) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s}
+.item:hover::after{transform:translateX(120%)}
+.item:hover{background:rgba(167,139,250,.14);border-color:rgba(167,139,250,.35);transform:translateX(4px)}
+.item.active{background:linear-gradient(90deg,rgba(245,199,107,.18),rgba(124,58,237,.16));border-color:rgba(245,199,107,.6);box-shadow:0 0 20px rgba(245,199,107,.22),inset 0 0 18px rgba(245,199,107,.06)}
+.item.active::before{content:"";position:absolute;left:-1px;top:18%;bottom:18%;width:3px;border-radius:3px;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.item.active .idb{color:#fde68a;border-color:rgba(245,199,107,.5);background:rgba(245,199,107,.12)}
+.orb{animation:floaty 3.5s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(167,139,250,.8))}
+@keyframes floaty{50%{transform:translateY(-6px) rotate(8deg)}}
+
+/* ===== 內容動畫 ===== */
+.reveal{animation:fadeUp .7s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px) scale(.98)}to{opacity:1;transform:none}}
+
+/* ===== 魔法陣 ===== */
+.mc{transform-box:fill-box;transform-origin:center}
+.spin-a{animation:spin 70s linear infinite}
+.spin-b{animation:spin 45s linear infinite reverse}
+.spin-c{animation:spin 28s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pulse-s{animation:pulseS 3s ease-in-out infinite}
+@keyframes pulseS{50%{opacity:.45}}
+
+/* ===== 程式碼 ===== */
+.codebox{background:linear-gradient(180deg,#0b0820,#070617);border:1px solid rgba(94,234,212,.22);box-shadow:0 0 36px rgba(94,234,212,.1),0 0 60px rgba(124,58,237,.1)}
+.codebox pre{margin:0;tab-size:4}
+.gutter{color:#4b5a8c;border-right:1px solid rgba(94,234,212,.12);user-select:none}
+.codebox .scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tk-k{color:#c4a8ff}.tk-t{color:#5eead4}.tk-s{color:#f5c76b}.tk-n{color:#fda4af}.tk-c{color:#6b7bb0;font-style:italic}.tk-p{color:#7dd3fc}.tk-f{color:#93c5fd}
+.scan{position:absolute;left:0;right:0;height:60px;top:-60px;background:linear-gradient(180deg,transparent,rgba(94,234,212,.08),transparent);animation:scan 5s linear infinite;pointer-events:none}
+@keyframes scan{to{top:100%}}
+.copy-btn{transition:all .2s;position:relative;overflow:hidden}
+.copy-btn:hover{box-shadow:0 0 18px rgba(94,234,212,.6);transform:translateY(-1px)}
+.copy-btn:active{transform:scale(.95)}
+.copy-btn.done{background:rgba(245,199,107,.2);border-color:#f5c76b;color:#fde68a;box-shadow:0 0 20px rgba(245,199,107,.6)}
+.navbtn{transition:all .3s;cursor:pointer;text-align:left;width:100%}
+.navbtn:hover{border-color:rgba(245,199,107,.7);box-shadow:0 0 24px rgba(245,199,107,.25);transform:translateY(-3px)}
+.navbtn:active{transform:scale(.97)}
+
+.scroll::-webkit-scrollbar{width:8px;height:8px}
+.scroll::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#a78bfa,#5eead4);border-radius:8px}
+.scroll::-webkit-scrollbar-track{background:transparent}
+.drawer{transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.bar{padding-top:env(safe-area-inset-top,0px)}
+.safe-b{padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sent{opacity:1}}
+</style>
+</head>
+<body>
+<div class="bg-magic"></div>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="stars"></div><div class="stars2"></div>
+<div id="runes"></div>
+<div id="glow"></div>
+<canvas id="fx"></canvas>
+<div id="progress"></div>
+
+<div class="h-full flex flex-col lg:flex-row">
+  <header class="bar lg:hidden glass shrink-0 flex items-center gap-3 px-4 py-3 z-30 border-x-0 border-t-0">
+    <button id="menuBtn" aria-label="開啟題目列表" class="shrink-0 w-10 h-10 rounded-lg border border-violet-400/40 grid place-items-center text-xl hover:shadow-[0_0_14px_rgba(167,139,250,.5)] transition">☰</button>
+    <div class="min-w-0">
+      <div class="gold-text font-bold tracking-wider text-base truncate">✦ 魔法解題古籍</div>
+      <div id="mobSub" class="text-xs text-violet-300/70 truncate">選擇一道試煉</div>
+    </div>
+  </header>
+
+  <div id="overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
+
+  <aside id="sidebar" class="drawer glass fixed lg:static inset-y-0 left-0 z-50 w-[86%] max-w-sm lg:w-80 xl:w-96 shrink-0 -translate-x-full lg:translate-x-0 flex flex-col lg:m-3 lg:mr-0 lg:rounded-2xl border-y-0 lg:border-y">
+    <div class="bar px-5 pt-5 pb-3">
+      <div class="flex items-start justify-between gap-2">
+        <div class="min-w-0 flex items-center gap-3">
+          <span class="orb text-3xl">🔮</span>
+          <div class="min-w-0">
+            <h1 class="gold-text rune-title text-2xl font-extrabold tracking-widest">魔法解題古籍</h1>
+            <p class="text-xs text-violet-300/70 mt-0.5">ZeroJudge 題庫 · 解題思路 · C++</p>
+          </div>
+        </div>
+        <button id="closeBtn" aria-label="關閉" class="lg:hidden shrink-0 w-9 h-9 rounded-lg border border-violet-400/40 text-lg hover:bg-violet-500/20">✕</button>
+      </div>
+      <div class="mt-4 relative">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-violet-300/60 text-sm">🔍</span>
+        <input id="search" type="search" placeholder="搜尋題號或名稱…" class="w-full bg-black/30 border border-violet-400/30 rounded-lg pl-9 pr-3 py-2 text-sm placeholder-violet-300/40 focus:outline-none focus:border-cyan-300/70 focus:shadow-[0_0_14px_rgba(94,234,212,.35)] transition">
+      </div>
+      <div class="mt-2 text-xs text-violet-300/60"><span id="count"></span></div>
+    </div>
+    <nav id="list" class="scroll flex-1 overflow-y-auto px-3 pb-4 space-y-1.5 safe-b" aria-label="題目列表"></nav>
+  </aside>
+
+  <main id="main" class="scroll flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
+    <div id="content" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 safe-b"></div>
+  </main>
+</div>
+
+<script>
+const PROBLEMS = [{"id": "a001", "title": "哈囉", "idea": "就像跟機器人打招呼一樣！我們用 cin 聽聽看你叫什麼名字，然後用 cout 親切地回覆 hello, 你的名字，展開你們友誼的第一步！", "code": "#include <iostream>\nusing namespace std;\nint main()\n {\n    string Input;\n    cin >> Input;\n    cout << \"hello, \" << Input;\n}"}, {"id": "a002", "title": "簡易加法", "idea": "加法大作戰！就像小學算數學一樣，我們只要把兩個數字 a 和 b 讀進來，然後用 + 把他們加起來印出來就大功告成啦！", "code": "#include <iostream>\nusing namespace std;\n\nint main()\n{\n    int a, b = 0;\n    cin >> a >> b;\n    cout << a + b;\n}"}, {"id": "a003", "title": "兩光法師占卜術", "idea": "今天來算個命！根據月份 M 和日期 D，用公式 (M * 2 + D) % 3 算出餘數。餘數是 0 就是普通、1 是吉、2 是大吉，快來看看今天運勢如何！", "code": "#include <iostream>\nusing namespace std;\nint main()\n{\n    int M, D, S= 0;\n    cin >> M >> D;\n    S = ((M*2)+D) % 3;\n    if(S == 0)\n    {\n        cout << \"普通\";\n    }\n    if(S == 1)\n    {\n        cout << \"吉\";\n    }\n    if(S == 2)\n    {\n        cout << \"大吉\";\n    }\n}"}, {"id": "a004", "title": "文文的求婚", "idea": "幫文文算算看哪一年是閏年！閏年的規則就是：能被 4 整除但不能被 100 整除，或者能被 400 整除。用一個 while 迴圈一直檢查年份，是閏年就印出「閏年」，不是就印出「平年」！", "code": "#include <iostream>\nusing namespace std;\nint main()\n{\n    int year;\n    while(cin >> year)\n    {\n        if(year%4==0 && year%100!=0 || year%400==0)\n        {\n            cout<<\"閏年\"<<endl;\n        }\n        else\n        {\n            cout<<\"平年\"<<endl;\n        }\n    }\n}"}, {"id": "a005", "title": "eva的回家作業", "idea": "這題是要我們找出數列的規律！先看前四個數字，檢查是等差數列（差一樣）還是等比數列（倍數一樣），然後算出第五個數字並把它們通通印出來～", "code": "#include <iostream>\nusing namespace std;\nint main()\n{\n    int t = 0;\n    cin >> t;\n    int a[t][5] = {0};\n    \n    for(int i = 0; i < t; i++)\n    {\n        cin >> a[i][0] >> a[i][1] >> a[i][2] >> a[i][3];\n        if((a[i][3] - a[i][2]) == (a[i][1] - a[i][0]))\n        {\n            a[i][4] = a[i][3] + (a[i][3] - a[i][2]);\n        }\n        else\n        {\n            a[i][4] = a[i][3] * (a[i][3] / a[i][2]);\n        }\n        cout << a[i][0] << \" \" << a[i][1] << \" \" << a[i][2] << \" \" << a[i][3] << \" \" << a[i][4] << endl;\n    }\n}"}, {"id": "a006", "title": "一元二次方程式", "idea": "輸入 a, b, c，求一元二次方程式 ax^2 + bx + c = 0 的根。直接帶入我們小學學過的公式解，再運用 cmath 的 sqrt() 開根號，最後要注意題目要求的排版格式！", "code": "#include <iostream>\n#include <cmath>\nusing namespace std;\nint main()\n{\n    int a, b, c = 0;\n    cin >> a >> b >> c;\n    int e = 0;\n    int d = (b * b) - (4 * a * c);\n    if(d < 0)\n    {\n       cout << \"No real root\";\n       \n    }\n    else if(d == 0)\n    {\n       cout << \"Two same roots \";\n       e = (b * -1)/(2 * a);\n       cout << \"x=\" << e;\n    }\n    else\n    {\n        cout << \"Two different roots \";\n        e = ((b * -1) + sqrt((b * b) - (4 * a * c))) / (2 * a);\n        cout << \"x1=\" << e;\n        e = ((b * -1) - sqrt((b * b) - (4 * a * c))) / (2 * a);\n        cout << \" , x2=\" << e;\n    }\n}"}, {"id": "a007", "title": "質數判斷", "idea": "判斷一個數字是不是質數。為了應付大量測資，我們先用「埃氏篩法」快速建出質數表，超過範圍的數字再用迴圈開根號檢查，這樣才不會超時！", "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nconst int MAX = 46340;\nbool is_p[46341];\nvector<int> primes;\n\nvoid init() \n{\n    fill(is_p + 2, is_p + MAX + 1, true);\n    for (int p = 2; p * p <= MAX; p++) {\n        if (is_p[p]) {\n            for (int i = p * p; i <= MAX; i += p)\n                is_p[i] = false;\n        }\n    }\n    for (int p = 2; p <= MAX; p++) {\n        if (is_p[p]) primes.push_back(p);\n    }\n}\n\nbool check(int n) {\n    if (n <= MAX) return is_p[n];\n    for (int p : primes) {\n        if (p * p > n) break;\n        if (n % p == 0) return false;\n    }\n    return true;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    init();\n    int n;\n    while (cin >> n) {\n        if (check(n)) cout << \"質數\\n\";\n        else cout << \"非質數\\n\";\n    }\n    return 0;\n}"}, {"id": "a009", "title": "解碼器", "idea": "密碼解密大挑戰！每一行字串裡的每個字元 ASCII 碼都減去 7，就能還原成原本的秘密訊息囉！", "code": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    string s;\n    while (getline(cin, s)) {\n        for (char c : s) {\n            cout << (char)(c - 7);\n        }\n        cout << \"\\n\";\n    }\n    return 0;\n}"}, {"id": "a010", "title": "因數分解", "idea": "把一個數字進行質因數分解！從最小的質數 2 開始除，一直除到不能除為止，並記錄每個質因數出現的次數，最後按照格式印出來。", "code": "#include <iostream>\n\nusing namespace std;\n\nint main() {\n    long long n;\n    while (cin >> n) \n    {\n        bool first = true;\n        for (long long i = 2; i * i <= n; i++) \n        {\n            if (n % i == 0) \n            {\n                int count = 0;\n                while (n % i == 0) \n                {\n                    count++;\n                    n /= i;\n                }\n                if (!first) cout << \" * \";\n                if (count > 1) cout << i << \"^\" << count;\n                else cout << i;\n                first = false;\n            }\n        }\n        if (n > 1) {\n            if (!first) cout << \" * \";\n            cout << n;\n        }\n        cout << \"\\n\";\n    }\n    return 0;\n}"}, {"id": "a013", "title": "羅馬數字", "idea": "穿越到古羅馬！先把兩個羅馬數字轉成阿拉伯數字相減算出差值，再把差值轉回羅馬數字印出來，完成雙向大變身！", "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nint r2i(string s) \n{\n    int val[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};\n    string rom[] = {\"M\", \"CM\", \"D\", \"CD\", \"C\", \"XC\", \"L\", \"XL\", \"X\", \"IX\", \"V\", \"IV\", \"I\"};\n    int res = 0, idx = 0;\n    for (int i = 0; i < 13; i++) \n    {\n        while (s.find(rom[i], idx) == idx) \n        {\n            res += val[i];\n            idx += rom[i].length();\n        }\n    }\n    return res;\n}\n\nstring i2r(int n) \n{\n    if (n == 0) return \"ZERO\";\n    int val[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};\n    string rom[] = {\"M\", \"CM\", \"D\", \"CD\", \"C\", \"XC\", \"L\", \"XL\", \"X\", \"IX\", \"V\", \"IV\", \"I\"};\n    string res = \"\";\n    for (int i = 0; i < 13; i++) \n    {\n        while (n >= val[i]) \n        {\n            res += rom[i];\n            n -= val[i];\n        }\n    }\n    return res;\n}\n\nint main() \n{\n    string a, b;\n    while (cin >> a && a != \"#\") \n    {\n        cin >> b;\n        int diff = abs(r2i(a) - r2i(b));\n        cout << i2r(diff) << \"\\n\";\n    }\n    return 0;\n}"}, {"id": "a015", "title": "矩陣的反轉", "idea": "矩陣大翻轉！原本是 a x b 的矩陣，轉置後變成 b x a。只要用兩層迴圈把行列對調讀進來再印出來，就像照鏡子一樣轉過來啦！", "code": "#include <iostream>\nusing namespace std;\n\nint main()\n{\n    int a;\n    int b;\n    while(cin >> a >> b)\n    {\n        int c[a][b];\n        for(int i = 0; i < a; i++)\n        {\n            for(int j = 0; j < b; j++)\n            {\n                cin >> c[i][j];\n            }\n        }\n        for(int j = 0; j < b; j++)\n        {\n            for(int i = 0; i < a; i++)\n            {\n                cout << c[i][j];\n                if(i != a - 1)\n                {\n                    cout << \" \";\n                }\n            }\n            cout <<endl;\n        }\n    }\n}"}, {"id": "a017", "title": "五則運算", "idea": "挑戰寫一個小計算機！要處理加減乘除、括號還有優先順序。我們用兩個堆疊，一個放數字、一個放運算子，照著先乘除後加減的規則算出來！", "code": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint pr(char op) {\n    if (op == '+' || op == '-') return 1;\n    if (op == '*' || op == '/' || op == '%') return 2;\n    return 0;\n}\n\nvoid calc(long long nums[], int& top_n, char ops[], int& top_o) {\n    long long b = nums[--top_n];\n    long long a = nums[--top_n];\n    char op = ops[--top_o];\n    if (op == '+') nums[top_n++] = a + b;\n    else if (op == '-') nums[top_n++] = a - b;\n    else if (op == '*') nums[top_n++] = a * b;\n    else if (op == '/') nums[top_n++] = a / b;\n    else if (op == '%') nums[top_n++] = a % b;\n}\n\nint main() {\n    string line;\n    while (getline(cin, line)) {\n        if (line.empty()) continue;\n        long long nums[1000];\n        char ops[1000];\n        int top_n = 0, top_o = 0;\n        string token = \"\";\n        for (size_t i = 0; i <= line.length(); i++) {\n            if (i == line.length() || line[i] == ' ') {\n                if (!token.empty()) {\n                    if (token == \"(\") {\n                        ops[top_o++] = '(';\n                    } else if (token == \")\") {\n                        while (top_o > 0 && ops[top_o - 1] != '(') {\n                            calc(nums, top_n, ops, top_o);\n                        }\n                        if (top_o > 0) top_o--;\n                    } else if (token == \"+\" || token == \"-\" || token == \"*\" || token == \"/\" || token == \"%\") {\n                        char op = token[0];\n                        while (top_o > 0 && pr(ops[top_o - 1]) >= pr(op)) {\n                            calc(nums, top_n, ops, top_o);\n                        }\n                        ops[top_o++] = op;\n                    } else {\n                        long long val = 0;\n                        for (char c : token) val = val * 10 + (c - '0');\n                        nums[top_n++] = val;\n                    }\n                    token = \"\";\n                }\n            } else {\n                token += line[i];\n            }\n        }\n        while (top_o > 0) {\n            calc(nums, top_n, ops, top_o);\n        }\n        if (top_n > 0) {\n            cout << nums[0] << \"\\n\";\n        }\n    }\n    return 0;\n}"}, {"id": "a020", "title": "身份證驗證", "idea": "檢查身分證字號是真的還假的！先用對照表把英文字母換成對應的兩個數字，然後按照身分證的加權公式計算，最後看總和能不能被 10 整除就知道囉！", "code": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\nint main()\n{\n    string ip;\n    cin>>ip;\n    map<char,int> m\n    {\n        {'A',10},\n        {'B',11},\n        {'C',12},\n        {'D',13},\n        {'E',14},\n        {'F',15},\n        {'G',16},\n        {'H',17},\n        {'I',34},\n        {'J',18},\n        {'K',19},\n        {'L',20},\n        {'M',21},\n        {'N',22},\n        {'O',35},\n        {'P',23},\n        {'Q',24},\n        {'R',25},\n        {'S',26},\n        {'T',27},\n        {'U',28},\n        {'V',29},\n        {'W',32},\n        {'X',30},\n        {'Y',31},\n        {'Z',33}\n    };\n    int sum=((m[ip[0]])%10)*9+(m[ip[0]])/10;\n    for(int i=1;i<9;i++)\n    {\n        sum+=(int(ip[i])-48)*(9-i);\n    }\n    sum+=int(ip[9])-48;\n    if(sum%10==0)\n    {\n        cout<<\"real\";\n    }else\n    {\n        cout<<\"fake\";\n    }\n}"}, {"id": "a021", "title": "大數運算", "idea": "數字太大，一般的變數裝不下啦！我們用字串模擬小學時期的直式加、減、乘、除法，一個位數一個位數慢慢算，再大的數字也難不倒我們！", "code": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\nbool big(string a, string b);\nstring add(string a, string b);\nstring sub(string a, string b);\nstring mul(string a, string b);\nstring div(string a, string b);\n\n\nint main() \n{\n    string a, b;\n    char op;\n    cin >> a >> op >> b;\n    if (op == '+') cout << add(a, b);\n    if (op == '-') cout << sub(a, b);\n    if (op == '*') cout << mul(a, b);\n    if (op == '/') cout << div(a, b);\n}\n\nbool big(string a, string b) \n{\n    if (a.size() != b.size()) return a.size() > b.size();\n    return a >= b;\n}\n\nstring add(string a, string b) \n{\n    string res = \"\";\n    int i = a.size() - 1, j = b.size() - 1, carry = 0;\n    while (i >= 0 || j >= 0 || carry) \n    {\n        int sum = carry + (i >= 0 ? a[i--] - '0' : 0) + (j >= 0 ? b[j--] - '0' : 0);\n        res += char(sum % 10 + '0');\n        carry = sum / 10;\n    }\n    reverse(res.begin(), res.end());\n    return res;\n}\n\nstring sub(string a, string b) \n{\n    bool neg = false;\n    if (!big(a, b)) { swap(a, b); neg = true; }\n    string res = \"\";\n    int i = a.size() - 1, j = b.size() - 1, borrow = 0;\n    while (i >= 0) \n    {\n        int diff = (a[i--] - '0') - borrow - (j >= 0 ? b[j--] - '0' : 0);\n        if (diff < 0) { diff += 10; borrow = 1; }\n        else borrow = 0;\n        res += char(diff + '0');\n    }\n    while (res.size() > 1 && res.back() == '0') res.pop_back();\n    if (neg) res += '-';\n    reverse(res.begin(), res.end());\n    return res;\n}\n\nstring mul(string a, string b) \n{\n    int n = a.size(), m = b.size();\n    string res(n + m, '0');\n    for (int i = n - 1; i >= 0; i--) \n    {\n        for (int j = m - 1; j >= 0; j--) \n        {\n            int sum = (a[i] - '0') * (b[j] - '0') + (res[i + j + 1] - '0');\n            res[i + j + 1] = sum % 10 + '0';\n            res[i + j] += sum / 10;\n        }\n    }\n    size_t pos = res.find_first_not_of('0');\n    return (pos == string::npos) ? \"0\" : res.substr(pos);\n}\n\nstring div(string a, string b) \n{\n    string res = \"\", cur = \"\";\n    for (char c : a) {\n        if (cur == \"0\") cur = \"\";\n        cur += c;\n        int cnt = 0;\n        while (big(cur, b)) \n        {\n            cur = sub(cur, b);\n            cnt++;\n        }\n        if (!(res.empty() && cnt == 0)) res += char(cnt + '0');\n    }\n    return res.empty() ? \"0\" : res;\n}"}, {"id": "a022", "title": "迴文", "idea": "什麼是迴文？就是正著唸反著唸都一樣的字串。我們把字串反轉過來，跟原本的字串比對一下，一樣就是迴文 yes，不一樣就是 no！", "code": "#include <string>\n#include <iostream>\nusing namespace std;\nint main()\n{\n    string a = \"\";\n    int b;\n    cin >> a;\n    int c = 0;\n    b = a.length();\n    string e = a;\n    int d = b;\n    for(int i = 0; i < b; i++)\n    {\n        d--;\n        e[d] = a[i];\n    }\n    for(int j = 0; j < b; j++)\n    {\n        if(e[j] != a[j])\n        {\n            c = 1;\n            cout << \"no\";\n            break;\n        }\n    }\n    if(c == 0)\n    {\n        cout << \"yes\";    \n    }    \n}"}, {"id": "a024", "title": "最大公因數", "idea": "求最大公因數不用自己寫輾轉相除法啦！C++ 的 numeric 裡面有現成的 gcd() 函式，一行搞定，超方便的！", "code": "#include <numeric> //最大公因數函式 附帶一提 最小公倍數是lcm()\n#include <iostream>\nusing namespace std;\nint main()\n{\n    int a, b = 0;\n    cin >> a >> b;\n    cout << gcd(a, b);    \n}"}, {"id": "a034", "title": "二進位制轉換", "idea": "把十進位的數字變成電腦看得懂的二進位！用 C++ 的 bitset 把它轉成 32 位元的字串，再找第一個 '1' 開始印出來，輕鬆搞定！", "code": "#include <iostream>\n#include <bitset>\n#include <string>\nusing namespace std;\nint main() \n{\n    int n;\n    while(cin >> n)\n    {        \n        string s = bitset<32>(n).to_string(); // 1. 先轉成 32 個字的字串\n        cout << s.substr(s.find('1')) << endl; // 2. 從第一個 '1' 開始印到最後 這只能處理正數\n    }   \n}"}, {"id": "a038", "title": "數字反轉", "idea": "把數字左右顛倒過來！先把它當成字串讀進來，用 reverse() 輕鬆反轉，再轉回數字印出來，就大功告成啦！", "code": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    string s;\n    cin >> s;\n    reverse(s.begin(), s.end());\n    cout << stoll(s);\n}"}];
+const $ = s => document.querySelector(s);
+const list = $('#list'), content = $('#content'), sidebar = $('#sidebar'), overlay = $('#overlay'), mainEl = $('#main');
+const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FINE = matchMedia('(hover:hover) and (pointer:fine)').matches;
+let current = null;
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* =============== 粒子特效引擎 =============== */
+const cv = $('#fx'), ctx = cv.getContext('2d');
+let W = 0, H = 0, mouse = {x:-999,y:-999};
+const COLORS = ['245,199,107','94,234,212','167,139,250','255,255,255','244,114,182'];
+const flies = [], sparks = [], stars = [];
+function resize(){
+  const d = Math.min(devicePixelRatio||1, 2);
+  W = innerWidth; H = innerHeight;
+  cv.width = W*d; cv.height = H*d; ctx.setTransform(d,0,0,d,0,0);
+}
+function mkFly(){
+  return {x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.9+.6,vx:(Math.random()-.5)*.3,vy:-(Math.random()*.35+.05),
+          ph:Math.random()*6.28,sp:Math.random()*.03+.01,c:COLORS[(Math.random()*COLORS.length)|0]};
+}
+function burst(x,y,n=24,spread=1){
+  if(REDUCE) return;
+  for(let i=0;i<n;i++){
+    const a=Math.random()*6.283, v=(Math.random()*3.2+.6)*spread;
+    sparks.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-.6,life:0,max:40+Math.random()*40,r:Math.random()*2.4+.8,c:COLORS[(Math.random()*4)|0]});
+  }
+}
+function shoot(){
+  const x = Math.random()*W*.8+W*.2, y = Math.random()*H*.35;
+  stars.push({x,y,vx:-(7+Math.random()*5),vy:4+Math.random()*3,life:0,max:55});
+}
+function loop(){
+  if(document.hidden){requestAnimationFrame(loop);return}
+  ctx.clearRect(0,0,W,H);
+  ctx.globalCompositeOperation='lighter';
+  // 螢火蟲
+  for(const f of flies){
+    f.ph+=f.sp; f.x+=f.vx+Math.sin(f.ph)*.25; f.y+=f.vy;
+    const dx=f.x-mouse.x, dy=f.y-mouse.y, d2=dx*dx+dy*dy;
+    if(d2<18000){const d=Math.sqrt(d2)||1;f.x+=dx/d*1.2;f.y+=dy/d*1.2}
+    if(f.y<-10){f.y=H+10;f.x=Math.random()*W}
+    if(f.x<-10)f.x=W+10; if(f.x>W+10)f.x=-10;
+    const a=.45+Math.sin(f.ph*2)*.35;
+    ctx.fillStyle=`rgba(${f.c},${a*.18})`; ctx.beginPath(); ctx.arc(f.x,f.y,f.r*5,0,6.283); ctx.fill();
+    ctx.fillStyle=`rgba(${f.c},${a})`; ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,6.283); ctx.fill();
+  }
+  // 星座連線
+  if(W>700){
+    ctx.lineWidth=.6;
+    for(let i=0;i<flies.length;i++)for(let j=i+1;j<flies.length;j++){
+      const a=flies[i],b=flies[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy;
+      if(d<9000){ctx.strokeStyle=`rgba(167,139,250,${(1-d/9000)*.22})`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+    }
+    // 滑鼠與附近粒子連線
+    for(const f of flies){const dx=f.x-mouse.x,dy=f.y-mouse.y,d=dx*dx+dy*dy;
+      if(d<26000){ctx.strokeStyle=`rgba(245,199,107,${(1-d/26000)*.45})`;ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke()}}
+  }
+  // 火花
+  for(let i=sparks.length-1;i>=0;i--){
+    const s=sparks[i]; s.life++; s.x+=s.vx; s.y+=s.vy; s.vy+=.05; s.vx*=.985;
+    if(s.life>s.max){sparks.splice(i,1);continue}
+    const t=1-s.life/s.max;
+    ctx.fillStyle=`rgba(${s.c},${t*.25})`; ctx.beginPath(); ctx.arc(s.x,s.y,s.r*4*t,0,6.283); ctx.fill();
+    ctx.fillStyle=`rgba(${s.c},${t})`; ctx.beginPath(); ctx.arc(s.x,s.y,s.r*t+.3,0,6.283); ctx.fill();
+  }
+  // 流星
+  for(let i=stars.length-1;i>=0;i--){
+    const s=stars[i]; s.life++; s.x+=s.vx; s.y+=s.vy;
+    if(s.life>s.max){stars.splice(i,1);continue}
+    const t=1-s.life/s.max, g=ctx.createLinearGradient(s.x,s.y,s.x-s.vx*9,s.y-s.vy*9);
+    g.addColorStop(0,`rgba(255,255,255,${t})`); g.addColorStop(1,'rgba(167,139,250,0)');
+    ctx.strokeStyle=g; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(s.x-s.vx*9,s.y-s.vy*9); ctx.stroke();
+    ctx.fillStyle=`rgba(255,255,255,${t})`; ctx.beginPath(); ctx.arc(s.x,s.y,2,0,6.283); ctx.fill();
+  }
+  ctx.globalCompositeOperation='source-over';
+  requestAnimationFrame(loop);
+}
+function initFx(){
+  resize();
+  const n = W<640 ? 36 : 85;
+  for(let i=0;i<n;i++) flies.push(mkFly());
+  if(REDUCE) return;
+  addEventListener('resize',()=>{resize()});
+  setInterval(()=>{ if(!document.hidden && Math.random()<.8) shoot() }, 3200);
+  setTimeout(shoot, 800);
+  loop();
+  // 漂浮符文
+  const SYM='☉☽☿♀♂♃♄♅♆✦✧⚝☆⚜❖'.split(''), box=$('#runes');
+  for(let i=0;i<16;i++){
+    const r=document.createElement('span'); r.className='rune'; r.textContent=SYM[i%SYM.length];
+    r.style.left=Math.random()*100+'%'; r.style.fontSize=(14+Math.random()*26)+'px';
+    r.style.color=`rgba(${COLORS[i%3]},.9)`; r.style.animationDuration=(18+Math.random()*22)+'s'; r.style.animationDelay=(-Math.random()*30)+'s';
+    box.appendChild(r);
+  }
+}
+// 滑鼠光暈 + 軌跡
+const glow = $('#glow'); let gx=-999,gy=-999,tx=0,ty=0,lastTrail=0;
+if(FINE && !REDUCE){
+  addEventListener('pointermove',e=>{
+    mouse.x=e.clientX; mouse.y=e.clientY; tx=e.clientX; ty=e.clientY; glow.style.opacity=1;
+    const now=performance.now();
+    if(now-lastTrail>35){lastTrail=now;burst(e.clientX,e.clientY,1,.35)}
+  });
+  document.addEventListener('pointerleave',()=>{glow.style.opacity=0;mouse.x=mouse.y=-999});
+  (function g(){gx+=(tx-gx)*.12;gy+=(ty-gy)*.12;glow.style.transform=`translate(${gx}px,${gy}px)`;requestAnimationFrame(g)})();
+}
+addEventListener('pointerdown',e=>burst(e.clientX,e.clientY,14,.9));
+
+// 滾動進度條
+mainEl.addEventListener('scroll',()=>{
+  const h=mainEl.scrollHeight-mainEl.clientHeight;
+  $('#progress').style.width=(h>0?mainEl.scrollTop/h*100:0)+'%';
+},{passive:true});
+
+// 卡片聚光 & 3D 傾斜
+content.addEventListener('pointermove',e=>{
+  if(e.pointerType==='touch') return;
+  const sp=e.target.closest('.spot'); if(sp){const r=sp.getBoundingClientRect();sp.style.setProperty('--mx',(e.clientX-r.left)+'px');sp.style.setProperty('--my',(e.clientY-r.top)+'px')}
+  const t=e.target.closest('.tilt'); if(t&&FINE&&!REDUCE){
+    const r=t.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+    t.style.transform=`rotateX(${-py*5}deg) rotateY(${px*7}deg) translateZ(0)`;
+  }
+});
+content.addEventListener('pointerout',e=>{const t=e.target.closest('.tilt'); if(t&&!t.contains(e.relatedTarget)) t.style.transform=''});
+
+/* =============== 魔法陣 SVG =============== */
+let mcId = 0;
+function magicCircle(){
+  const id='cp'+(mcId++);
+  const star=(n,r,skip)=>{let p=[];for(let i=0;i<n;i++){const a=(i*skip%n)/n*6.283-1.5708;p.push((r*Math.cos(a)).toFixed(1)+','+(r*Math.sin(a)).toFixed(1))}return p.join(' ')};
+  const ticks=Array.from({length:60},(_,i)=>{const a=i/60*6.283,r1=i%5?186:178,r2=194;return `<line x1="${(r1*Math.cos(a)).toFixed(1)}" y1="${(r1*Math.sin(a)).toFixed(1)}" x2="${(r2*Math.cos(a)).toFixed(1)}" y2="${(r2*Math.sin(a)).toFixed(1)}"/>`}).join('');
+  return `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" aria-hidden="true">
+  <defs><path id="${id}" d="M -158,0 a158,158 0 1,1 316,0 a158,158 0 1,1 -316,0"/>
+   <radialGradient id="${id}g"><stop offset="0" stop-color="#f5c76b" stop-opacity=".55"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/></radialGradient></defs>
+  <g transform="translate(200 200)" fill="none" stroke-linecap="round">
+    <circle r="62" fill="url(#${id}g)" class="pulse-s"/>
+    <g class="mc spin-a"><circle r="196" stroke="#a78bfa" stroke-opacity=".7" stroke-width="1.6"/><circle r="170" stroke="#f5c76b" stroke-opacity=".6" stroke-dasharray="3 9"/>
+      <g stroke="#f5c76b" stroke-opacity=".7">${ticks}</g>
+      <text fill="#f5c76b" fill-opacity=".85" stroke="none" font-size="17" letter-spacing="9"><textPath href="#${id}">☉ ☽ ☿ ♀ ♂ ♃ ♄ ♅ ♆ ✦ ⚝ ☉ ☽ ☿ ♀ ♂ ♃ ♄ ♅ ♆ ✦ ⚝</textPath></text></g>
+    <g class="mc spin-b"><circle r="132" stroke="#5eead4" stroke-opacity=".7" stroke-width="1.4"/>
+      <polygon points="${star(6,132,2)}" stroke="#5eead4" stroke-opacity=".8"/><polygon points="${star(6,132,1)}" stroke="#a78bfa" stroke-opacity=".6"/></g>
+    <g class="mc spin-c"><circle r="92" stroke="#f5c76b" stroke-opacity=".7" stroke-dasharray="14 6"/>
+      <polygon points="${star(5,92,2)}" stroke="#f5c76b" stroke-opacity=".85" stroke-width="1.4"/></g>
+    <circle r="30" stroke="#5eead4" stroke-opacity=".8" stroke-width="1.5"/><circle r="6" fill="#f5c76b" stroke="none" class="pulse-s"/>
+  </g></svg>`;
+}
+
+/* =============== 語法高亮 =============== */
+const KW = new Set('if else for while do switch case break continue return using namespace const static struct class public private new delete true false nullptr auto typedef template typename void sizeof'.split(' '));
+const TY = new Set('int long short char bool float double string vector map set unsigned signed size_t cin cout cerr endl pair queue stack deque'.split(' '));
+const TOKEN = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(^[ \t]*#[^\n]*)|(\b\d+(?:\.\d+)?(?:LL|ll|u|U)?\b)|([A-Za-z_]\w*)(\s*\()?/gm;
+function highlight(code){
+  let out='', last=0, m; TOKEN.lastIndex=0;
+  while((m=TOKEN.exec(code))){
+    out+=esc(code.slice(last,m.index));
+    if(m[1]) out+=`<span class="tk-c">${esc(m[1])}</span>`;
+    else if(m[2]) out+=`<span class="tk-s">${esc(m[2])}</span>`;
+    else if(m[3]) out+=`<span class="tk-p">${esc(m[3])}</span>`;
+    else if(m[4]) out+=`<span class="tk-n">${esc(m[4])}</span>`;
+    else if(m[5]){const w=m[5];
+      if(KW.has(w)) out+=`<span class="tk-k">${w}</span>${esc(m[6]||'')}`;
+      else if(TY.has(w)) out+=`<span class="tk-t">${w}</span>${esc(m[6]||'')}`;
+      else if(m[6]) out+=`<span class="tk-f">${w}</span>${esc(m[6])}`;
+      else out+=w;}
+    last=TOKEN.lastIndex;
+  }
+  return out+esc(code.slice(last));
+}
+function skills(c){
+  const s=[];
+  if(/\b(for|while)\b/.test(c)) s.push(['🔁','迴圈']);
+  if(/\bif\b/.test(c)) s.push(['🔀','條件判斷']);
+  if(/\w\[[^\]]*\]/.test(c)) s.push(['🗃️','陣列']);
+  if(/\bstring\b/.test(c)) s.push(['🔤','字串']);
+  if(/\b(vector|map|set)\s*</.test(c)) s.push(['📦','STL 容器']);
+  if(/%/.test(c)) s.push(['➗','取餘數']);
+  if(/sqrt|cmath|pow/.test(c)) s.push(['📐','數學函式']);
+  if(/long long/.test(c)) s.push(['💎','大整數']);
+  if(/^(?:int|void|bool|string|long long|double|char)\s+(?!main\b)\w+\s*\(/m.test(c)) s.push(['🧩','自訂函式']);
+  return s;
+}
+function ideaHtml(t){
+  const CH=/\b(cin|cout|cmath|while|for|if|else|sqrt|getline|ASCII|vector|string|int|long long|bool)\b/g;
+  const parts=t.split(/(?<=[！。？!?])/).filter(Boolean);
+  return parts.map((s,i)=>`<span class="sent" style="animation-delay:${.25+i*.18}s">${esc(s).replace(CH,'<code class="chip">$1</code>')}</span>`).join('');
+}
+
+/* =============== 側邊欄 =============== */
+function renderList(filter='', animate=false){
+  const q=filter.trim().toLowerCase();
+  const items=PROBLEMS.filter(p=>!q||p.id.includes(q)||p.title.toLowerCase().includes(q));
+  $('#count').textContent=`共 ${items.length} / ${PROBLEMS.length} 道試煉`;
+  list.innerHTML=items.length?items.map((p,i)=>`
+    <button data-id="${p.id}" class="item ${animate?'enter':''} w-full text-left rounded-xl px-3 py-2.5 flex items-center gap-3 ${current&&current.id===p.id?'active':''}" style="${animate?`animation-delay:${Math.min(i*45,700)}ms`:''}">
+      <span class="idb mono shrink-0 text-xs px-2 py-1 rounded-md bg-violet-500/15 text-cyan-200 border border-cyan-300/20 transition">${p.id}</span>
+      <span class="min-w-0 text-sm leading-snug break-words">${esc(p.title)}</span>
+      ${current&&current.id===p.id?'<span class="ml-auto text-amber-200 pulse-s">✦</span>':''}
+    </button>`).join(''):'<p class="text-center text-sm text-violet-300/60 py-8">🌌 找不到符合的試煉</p>';
+}
+list.addEventListener('click',e=>{
+  const b=e.target.closest('[data-id]'); if(!b) return;
+  const r=b.getBoundingClientRect(); burst(r.left+30,r.top+r.height/2,18);
+  go(b.dataset.id); closeDrawer();
+});
+$('#search').addEventListener('input',e=>renderList(e.target.value,true));
+
+function openDrawer(){sidebar.classList.remove('-translate-x-full');overlay.classList.remove('opacity-0','pointer-events-none')}
+function closeDrawer(){sidebar.classList.add('-translate-x-full');overlay.classList.add('opacity-0','pointer-events-none')}
+$('#menuBtn').onclick=openDrawer; $('#closeBtn').onclick=closeDrawer; overlay.onclick=closeDrawer;
+
+/* =============== 切換題目 =============== */
+function go(id){
+  try{ if(decodeURIComponent(location.hash.slice(1))!==id) history.replaceState(null,'','#'+id); }catch(_){ try{location.hash=id}catch(__){} }
+  show(id);
+}
+function flash(){
+  if(REDUCE) return;
+  const r=document.createElement('div'); r.className='ring';
+  const b=mainEl.getBoundingClientRect(); r.style.left=(b.left+b.width/2)+'px'; r.style.top=(b.top+Math.min(b.height/2,260))+'px';
+  document.body.appendChild(r); setTimeout(()=>r.remove(),950);
+}
+function show(id){
+  const idx=PROBLEMS.findIndex(p=>p.id===id);
+  if(idx<0){ if(content.dataset.id!=='') welcome(); return; }
+  if(content.dataset.id===id) return;
+  content.dataset.id=id;
+  const p=PROBLEMS[idx]; current=p;
+  const prev=PROBLEMS[idx-1], next=PROBLEMS[idx+1];
+  $('#mobSub').textContent=`${p.id} · ${p.title}`;
+  const lines=p.code.split('\n'), sk=skills(p.code);
+  const rv=(d)=>`style="animation-delay:${d}ms"`;
+  content.innerHTML=`
+  <article class="perspective space-y-6">
+    <header class="reveal tilt spot rot-border glass rounded-2xl p-5 sm:p-7" ${rv(0)}>
+      <div class="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none"><div class="absolute -right-16 -top-16 w-72 h-72 sm:w-96 sm:h-96 opacity-40">${magicCircle()}</div></div>
+      <div class="relative">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span class="mono text-xs px-2.5 py-1 rounded-full border border-amber-300/50 text-amber-200 bg-amber-300/10">第 ${idx+1} / ${PROBLEMS.length} 試煉</span>
+          <span class="mono text-xs px-2.5 py-1 rounded-full border border-cyan-300/40 text-cyan-200 bg-cyan-300/10">${p.id}</span>
+          <a href="https://zerojudge.tw/ShowProblem?problemid=${p.id}" target="_blank" rel="noopener" class="text-xs px-2.5 py-1 rounded-full border border-violet-300/40 text-violet-200 hover:bg-violet-400/20 transition">前往 ZeroJudge ↗</a>
+        </div>
+        <h2 class="gold-text rune-title text-3xl sm:text-5xl font-extrabold leading-tight break-words">${esc(p.title)}</h2>
+        <div class="flex flex-wrap gap-2 mt-5">${sk.map((s,i)=>`<span class="badge text-xs px-2.5 py-1 rounded-full bg-violet-500/15 border border-violet-300/30 text-violet-100" style="animation-delay:${400+i*90}ms">${s[0]} ${s[1]}</span>`).join('')}</div>
+      </div>
+    </header>
+
+    <section class="reveal tilt spot glass rounded-2xl p-5 sm:p-7" ${rv(150)}>
+      <h3 class="flex items-center gap-2 text-lg sm:text-xl font-bold text-cyan-200 mb-3"><span class="orb">📜</span> 解題思路</h3>
+      <div class="h-px bg-gradient-to-r from-cyan-300/70 via-violet-400/40 to-transparent mb-4"></div>
+      <p class="text-[15px] sm:text-[17px] leading-9 text-violet-50/90 break-words whitespace-pre-line">${ideaHtml(p.idea)}</p>
+    </section>
+
+    <section class="reveal codebox rot-border rounded-2xl overflow-hidden relative" ${rv(300)}>
+      <div class="scan"></div>
+      <div class="flex items-center justify-between gap-3 px-4 py-3 border-b border-cyan-300/15 bg-black/30 relative z-10">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="flex gap-1.5 shrink-0"><i class="w-2.5 h-2.5 rounded-full bg-rose-400/80"></i><i class="w-2.5 h-2.5 rounded-full bg-amber-300/80"></i><i class="w-2.5 h-2.5 rounded-full bg-emerald-400/80"></i></span>
+          <span class="mono text-xs text-violet-300/70 truncate">⚡ ${p.id}.cpp · ${lines.length} 行</span>
+        </div>
+        <button id="copyBtn" class="copy-btn shrink-0 text-xs sm:text-sm px-3 py-1.5 rounded-lg border border-cyan-300/50 text-cyan-100 bg-cyan-300/10 hover:bg-cyan-300/20">📋 複製程式碼</button>
+      </div>
+      <div class="flex relative z-10">
+        <pre class="gutter mono shrink-0 text-right text-[13px] sm:text-sm leading-6 py-4 sm:py-5 pl-3 pr-3">${lines.map((_,i)=>i+1).join('\n')}</pre>
+        <div class="scroll scrollx flex-1 min-w-0"><pre class="mono text-[13px] sm:text-sm leading-6 py-4 sm:py-5 px-4 text-slate-200"><code>${highlight(p.code)}</code></pre></div>
+      </div>
+    </section>
+
+    <nav class="grid grid-cols-2 gap-3 pb-6">
+      ${prev?`<button type="button" data-go="${prev.id}" class="navbtn reveal glass rounded-xl p-3 sm:p-4 min-w-0" ${rv(450)}><div class="text-xs text-violet-300/70">← 上一題</div><div class="text-sm font-semibold truncate">${prev.id} ${esc(prev.title)}</div></button>`:'<div></div>'}
+      ${next?`<button type="button" data-go="${next.id}" class="navbtn reveal glass rounded-xl p-3 sm:p-4 min-w-0 text-right" style="text-align:right;animation-delay:520ms"><div class="text-xs text-violet-300/70">下一題 →</div><div class="text-sm font-semibold truncate">${next.id} ${esc(next.title)}</div></button>`:'<div></div>'}
+    </nav>
+  </article>`;
+  $('#copyBtn').onclick=e=>copy(p.code,e.currentTarget);
+  mainEl.scrollTo({top:0}); $('#progress').style.width='0';
+  renderList($('#search').value);
+  const a=list.querySelector('.active'); if(a) a.scrollIntoView({block:'nearest'});
+  flash(); burst(innerWidth/2,Math.min(innerHeight/3,220),40,1.3);
+}
+content.addEventListener('click',e=>{
+  const b=e.target.closest('[data-go]'); if(!b) return;
+  go(b.dataset.go);
+});
+
+function welcome(){
+  current=null; content.dataset.id='';
+  $('#mobSub').textContent='選擇一道試煉';
+  content.innerHTML=`
+  <div class="reveal rot-border glass rounded-3xl p-8 sm:p-12 text-center mt-4 lg:mt-10">
+    <div class="relative mx-auto w-64 h-64 sm:w-80 sm:h-80">
+      ${magicCircle()}
+      <div class="orb absolute inset-0 grid place-items-center text-6xl sm:text-7xl pointer-events-none">🔮</div>
+    </div>
+    <h2 class="gold-text rune-title text-3xl sm:text-5xl font-extrabold mt-6 mb-4">魔法解題古籍</h2>
+    <p class="text-violet-200/85 text-lg sm:text-xl leading-8">請點擊左側選擇題目</p>
+  </div>`;
+  renderList($('#search').value);
+}
+
+/* =============== 複製 =============== */
+async function copy(text,btn){
+  let ok=false;
+  try{ await navigator.clipboard.writeText(text); ok=true; }catch(_){
+    try{ const ta=document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0;top:0';
+      document.body.appendChild(ta); ta.select(); ok=document.execCommand('copy'); ta.remove(); }catch(__){}
+  }
+  btn.textContent=ok?'✅ 已複製！':'⚠️ 複製失敗';
+  btn.classList.toggle('done',ok);
+  if(ok){const r=btn.getBoundingClientRect(); burst(r.left+r.width/2,r.top+r.height/2,60,1.6)}
+  clearTimeout(btn._t);
+  btn._t=setTimeout(()=>{btn.textContent='📋 複製程式碼';btn.classList.remove('done')},1800);
+}
+
+/* =============== 路由與鍵盤 =============== */
+const route=()=>show(decodeURIComponent(location.hash.slice(1)));
+addEventListener('hashchange',route);
+addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeDrawer();
+  if(/INPUT|TEXTAREA/.test(document.activeElement.tagName)||!current) return;
+  const i=PROBLEMS.findIndex(p=>p.id===current.id);
+  if(e.key==='ArrowRight'&&PROBLEMS[i+1]) go(PROBLEMS[i+1].id);
+  if(e.key==='ArrowLeft'&&PROBLEMS[i-1]) go(PROBLEMS[i-1].id);
+});
+
+initFx();
+renderList('',true);
+content.dataset.id='';
+(()=>{const h=decodeURIComponent(location.hash.slice(1)); PROBLEMS.some(p=>p.id===h)?show(h):welcome()})();
+</script>
+</body>
+<audio id="bgm"></audio>
+<script>
+const playlist = ['song1.mp3', 'song2.mp3', 'song3.mp3'];
+let currentTrack = 0;
+const bgmAudio = document.getElementById('bgm');
+
+function playNextTrack() {
+  bgmAudio.src = playlist[currentTrack];
+  currentTrack = (currentTrack + 1) % playlist.length;
+  bgmAudio.play().catch(() => {
+    // 💡 應對現代瀏覽器政策：如果一開始被瀏覽器擋住聲音，
+    // 只要使用者在畫面上點擊第一下，就會自動解鎖並開始播放音樂與循環！
+    const unlock = () => {
+      bgmAudio.play();
+      document.removeEventListener('click', unlock);
+      document.removeEventListener('keydown', unlock);
+    };
+    document.addEventListener('click', unlock);
+    document.addEventListener('keydown', unlock);
+  });
+}
+
+// 當一首歌播完時，自動切換到下一首
+bgmAudio.addEventListener('ended', playNextTrack);
+
+// 初始化播放第一首
+playNextTrack();
+</script>
+</html>
